@@ -17,4 +17,107 @@ async function profile(){show("profile");let r=await db.from("profiles").select(
 async function save(){if(!adult(dob.value))return msg("Tu dois avoir 18 ans.");let r=await db.from("profiles").upsert({id:u.id,first_name:nm.value,birth_date:dob.value,intent:it.value||null,passion:pa.value||null,updated_at:new Date().toISOString()});msg(r.error?r.error.message:"Profil enregistré ✓")}
 async function logout(){await db.auth.signOut();u=null;show("home")}
 (async()=>{let r=await db.auth.getSession();if(r.data.session){u=r.data.session.user;profile()}})();
-</script></body></html>
+const app=document.querySelector("main");
+
+function menu(){
+ if(document.getElementById("nav"))return;
+ app.insertAdjacentHTML("beforeend",`
+ <div id="nav" style="position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:440px;background:#171020;padding:8px;display:flex;gap:5px">
+ <button onclick="profile()">👤 Profil</button>
+ <button onclick="discover()">♥ Découvrir</button>
+ <button onclick="matches()">💬 Matchs</button>
+ </div>
+ <section id="discover" class="hide box"><h2>Découvrir ♥</h2><div id="people"></div></section>
+ <section id="matches" class="hide box"><h2>Mes matchs ♥</h2><div id="matchlist"></div></section>`);
+}
+
+const oldProfile=profile;
+profile=async function(){
+ await oldProfile();
+ menu();
+}
+
+async function discover(){
+ ["home","signup","login","profile","matches"].forEach(x=>{
+  let e=document.getElementById(x);if(e)e.classList.add("hide")
+ });
+ document.getElementById("discover").classList.remove("hide");
+ people.innerHTML="Chargement…";
+
+ let r=await db.from("profiles")
+  .select("id,first_name,intent,passion")
+  .neq("id",u.id)
+  .not("first_name","is",null)
+  .limit(20);
+
+ if(r.error){people.textContent=r.error.message;return}
+
+ if(!r.data.length){
+  people.innerHTML="<p>Aucun autre membre pour le moment.</p>";
+  return;
+ }
+
+ people.innerHTML=r.data.map(p=>`
+ <div class="box">
+ <h2>${safe(p.first_name||"Membre")}</h2>
+ <p>${safe(p.passion||"")}</p>
+ <p>${safe(intentText(p.intent))}</p>
+ <button onclick="likeUser('${p.id}')">♥ J'aime</button>
+ </div>`).join("");
+}
+
+async function likeUser(id){
+ let r=await db.from("likes").insert({
+  liker_id:u.id,
+  liked_id:id
+ });
+ if(r.error){
+  if(r.error.code==="23505")msg("Tu as déjà aimé ce profil ♥");
+  else msg(r.error.message);
+ }else msg("Like envoyé ♥");
+}
+
+async function matches(){
+ ["home","signup","login","profile","discover"].forEach(x=>{
+  let e=document.getElementById(x);if(e)e.classList.add("hide")
+ });
+ document.getElementById("matches").classList.remove("hide");
+ matchlist.innerHTML="Chargement…";
+
+ let r=await db.from("matches")
+  .select("*")
+  .or(`user_a.eq.${u.id},user_b.eq.${u.id}`);
+
+ if(r.error){matchlist.textContent=r.error.message;return}
+
+ if(!r.data.length){
+  matchlist.innerHTML="<p>Pas encore de match. Continue à découvrir des profils ♥</p>";
+  return;
+ }
+
+ let html="";
+ for(let x of r.data){
+  let other=x.user_a===u.id?x.user_b:x.user_a;
+  let p=await db.from("profiles")
+   .select("first_name,passion")
+   .eq("id",other)
+   .maybeSingle();
+
+  html+=`<div class="box"><h2>♥ ${safe(p.data?.first_name||"Nouveau match")}</h2><p>${safe(p.data?.passion||"")}</p></div>`;
+ }
+ matchlist.innerHTML=html;
+}
+
+function safe(x){
+ let d=document.createElement("div");
+ d.textContent=x||"";
+ return d.innerHTML;
+}
+
+function intentText(x){
+ return {
+  serious:"Relation sérieuse",
+  getting_to_know:"Faire connaissance",
+  casual:"Rencontre sans pression"
+ }[x]||"";
+}</script></body></html>
