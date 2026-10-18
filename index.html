@@ -1,20 +1,20 @@
-<!doctype html>
-<html lang="fr">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#10091c">
-<title>Le Meet — More than a match</title>
-
-<style>
-*{box-sizing:border-box}
-body{
- margin:0;background:#0c0915;color:#fff;
- font-family:Arial,sans-serif;min-height:100vh;
-}
-.app{max-width:460px;margin:auto;min-height:100vh;padding:24px 18px 90px}
-.logo{font-size:30px;font-weight:900}
-.logo span{color:#ff4fa3}
-.badge{font-size:12px;color:#d5c8ef}
-h1{font-size:38px;line-height:1.05;margin:35px 0 10px}
-.gradient{
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>LEMEET</title><style>
+*{box-sizing:border-box}body{margin:0;background:#0c0915;color:white;font:16px Arial}.a{max-width:440px;margin:auto;padding:25px 18px}.logo{font-size:30px;font-weight:bold}.pink{color:#ff4fa3}h1{font-size:42px;margin-top:70px}p{color:#c7bdd0}input,select,button,a{width:100%;padding:15px;margin:7px 0;border:0;border-radius:13px;font-size:16px}input,select{background:#21172b;color:white}button,a{background:#a64cff;color:white;font-weight:bold;text-align:center;display:block;text-decoration:none}.box{background:#171020;padding:18px;border-radius:18px;margin-top:20px}.hide{display:none}</style></head><body><main class="a">
+<div class="logo">Le Meet <span class="pink">♥</span></div>
+<section id="home"><h1>More than<br><span class="pink">a match.</span></h1><p>Moins de swipe. Plus de connexion.</p><p>Des rencontres basées sur tes envies, tes affinités et ton intention.</p><button onclick="show('signup')">Commencer gratuitement →</button><button onclick="show('login')">Se connecter</button></section>
+<section id="signup" class="hide box"><h2>Créer mon compte · 18+</h2><input id="se" type="email" placeholder="E-mail"><input id="sp" type="password" placeholder="Mot de passe"><input id="bd" type="date"><button onclick="signup()">Créer mon compte</button></section>
+<section id="login" class="hide box"><h2>Connexion</h2><input id="le" type="email" placeholder="E-mail"><input id="lp" type="password" placeholder="Mot de passe"><button onclick="login()">Se connecter</button></section>
+<section id="profile" class="hide box"><h2>Mon profil</h2><input id="nm" placeholder="Prénom"><input id="dob" type="date"><select id="it"><option value="">Je recherche…</option><option value="serious">Relation sérieuse</option><option value="getting_to_know">Faire connaissance</option><option value="casual">Sans pression</option></select><input id="pa" placeholder="Passion"><button onclick="save()">Enregistrer</button><a href="https://buy.stripe.com/28EeVf9gM2cu4fgdcC0VO00">♥ Premium £9.99/mois</a><button onclick="logout()">Déconnexion</button></section>
+<p id="m"></p></main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script>
+const db=supabase.createClient("https://xrdolyfbbflifwbnkjhi.supabase.co","sb_publishable_C4j_c2VUBIsoUB4CS1JVrQ_pq1FEcyt");let u;
+function show(x){["home","signup","login","profile"].forEach(i=>document.getElementById(i).classList.add("hide"));document.getElementById(x).classList.remove("hide")}
+function msg(x){m.textContent=x}
+function adult(d){let b=new Date(d),n=new Date(),a=n.getFullYear()-b.getFullYear();if(n<new Date(n.getFullYear(),b.getMonth(),b.getDate()))a--;return a>=18}
+async function signup(){if(!adult(bd.value))return msg("Réservé aux 18+.");let r=await db.auth.signUp({email:se.value,password:sp.value});if(r.error)return msg(r.error.message);u=r.data.user;if(u)await db.from("profiles").upsert({id:u.id,birth_date:bd.value});msg("Compte créé. Vérifie ton e-mail si demandé.");if(r.data.session)profile()}
+async function login(){let r=await db.auth.signInWithPassword({email:le.value,password:lp.value});if(r.error)return msg(r.error.message);u=r.data.user;profile()}
+async function profile(){show("profile");let r=await db.from("profiles").select("*").eq("id",u.id).maybeSingle();if(r.data){nm.value=r.data.first_name||"";dob.value=r.data.birth_date||"";it.value=r.data.intent||"";pa.value=r.data.passion||""}}
+async function save(){if(!adult(dob.value))return msg("Tu dois avoir 18 ans.");let r=await db.from("profiles").upsert({id:u.id,first_name:nm.value,birth_date:dob.value,intent:it.value||null,passion:pa.value||null,updated_at:new Date().toISOString()});msg(r.error?r.error.message:"Profil enregistré ✓")}
+async function logout(){await db.auth.signOut();u=null;show("home")}
+(async()=>{let r=await db.auth.getSession();if(r.data.session){u=r.data.session.user;profile()}})();
+</script></body></html>
