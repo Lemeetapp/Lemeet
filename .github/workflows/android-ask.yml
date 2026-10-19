@@ -20,13 +20,36 @@ jobs:
         with:
           distribution: temurin
           java-version: '21'
-      
+
       - name: Install dependencies
         run: npm install
       - name: Create Android project
         run: npx cap add android
       - name: Sync Android
         run: npx cap sync android
+      - name: Register Google login return link
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          manifest = Path('android/app/src/main/AndroidManifest.xml')
+          xml = manifest.read_text(encoding='utf-8')
+          scheme = 'com.lemeet.app'
+          if f'android:scheme="{scheme}"' not in xml:
+              intent = '''
+                  <intent-filter>
+                      <action android:name="android.intent.action.VIEW" />
+                      <category android:name="android.intent.category.DEFAULT" />
+                      <category android:name="android.intent.category.BROWSABLE" />
+                      <data android:scheme="com.lemeet.app"
+                            android:host="auth"
+                            android:path="/callback" />
+                  </intent-filter>
+              '''
+              if '</activity>' not in xml:
+                  raise RuntimeError('Android main activity not found')
+              xml = xml.replace('</activity>', intent + '\n        </activity>', 1)
+              manifest.write_text(xml, encoding='utf-8')
+          PY
       - name: Build APK
         run: |
           chmod +x android/gradlew
