@@ -89,6 +89,13 @@
 .demo-swipe-info{padding:12px}
 .premium-discover-btn{width:100%;font-size:13px}
 @media(max-width:480px){.nav{position:sticky;bottom:0;z-index:5;background:#231629;padding:6px 0}.nav button{font-size:11px}.demo-swipe-photo{height:220px}}
+
+/* Correctif mobile : navigation fixe et quatre onglets sans débordement */
+html,body{max-width:100%;overflow-x:clip}
+#nav.nav{position:fixed!important;left:50%!important;right:auto!important;bottom:0!important;transform:translateX(-50%)!important;width:100%!important;max-width:480px!important;display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:4px!important;padding:8px 8px calc(8px + env(safe-area-inset-bottom))!important;margin:0!important;box-sizing:border-box!important;z-index:100!important}
+#nav.nav.hide{display:none!important}
+#nav.nav button{display:flex!important;align-items:center;justify-content:center;min-width:0!important;width:100%!important;max-width:100%!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;font-size:clamp(10px,2.65vw,12px)!important;padding:11px 2px!important;margin:0!important;box-sizing:border-box!important}
+@media(max-width:380px){#nav.nav{gap:3px!important;padding-left:4px!important;padding-right:4px!important}#nav.nav button{font-size:10px!important}}
 </style></head><body><main class="a"><div class="logo">Le Meet <span class="pink">♥</span></div>
 <section id="home"><span class="hero-pill">✦ DES RENCONTRES AUTHENTIQUES</span>
 <h1>More than<br><span class="pink">a match.</span></h1>
