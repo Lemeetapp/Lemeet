@@ -96,6 +96,12 @@ html,body{max-width:100%;overflow-x:clip}
 #nav.nav.hide{display:none!important}
 #nav.nav button{display:flex!important;align-items:center;justify-content:center;min-width:0!important;width:100%!important;max-width:100%!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;font-size:clamp(10px,2.65vw,12px)!important;padding:11px 2px!important;margin:0!important;box-sizing:border-box!important}
 @media(max-width:380px){#nav.nav{gap:3px!important;padding-left:4px!important;padding-right:4px!important}#nav.nav button{font-size:10px!important}}
+
+.intimity-page{background:linear-gradient(155deg,#321629,#21142e);border:1px solid #ab566d;border-radius:22px}
+.intimity-page h2{font-size:clamp(28px,7vw,42px)}
+.intimity-free{margin:14px 0;padding:16px;border:1px solid #d3819655;background:#ffffff0b;border-radius:16px}
+.intimity-free strong{font-size:18px}.intimity-free p{line-height:1.5}
+.passion-teaser button{margin-top:14px}
 </style></head><body><main class="a"><div class="logo">Le Meet <span class="pink">♥</span></div>
 <section id="home"><span class="hero-pill">✦ DES RENCONTRES AUTHENTIQUES</span>
 <h1>More than<br><span class="pink">a match.</span></h1>
@@ -112,8 +118,8 @@ html,body{max-width:100%;overflow-x:clip}
 <span class="passion-tag">🔥 ESPACE PASSION · 18+</span>
 <h2>Plus d’audace ?</h2>
 <p>Un espace pour les rencontres sensuelles, entre adultes consentants.</p>
-<a href="https://buy.stripe.com/28EeVf9gM2cu4fgdcC0VO00" target="_blank" rel="noopener noreferrer">Découvrir Premium · £9.99/mois →</a>
-<small>Abonnement Stripe. L’accès automatique à l’espace est en préparation.</small>
+<button type="button" onclick="openIntimity()">Entrer gratuitement dans Intimity · 18+ →</button>
+<small>Accès gratuit réservé aux adultes. Le Premium est facultatif.</small>
 </aside>
 <p class="illustration-note">Visuels d’ambiance créés par IA · Aucun faux profil.</p>
 </section>
@@ -137,6 +143,16 @@ html,body{max-width:100%;overflow-x:clip}
 <div class="geo-row"><span id="locationStatus">Position non partagée</span><button type="button" onclick="requestLocation()">Utiliser ma position</button></div>
 <p class="geo-note">Ta position est facultative et reste sur cet appareil dans cette version. Les autres membres ne voient jamais tes coordonnées exactes. Le filtrage réel par distance sera activé lorsque les profils disposeront de localisations consenties et sécurisées.</p>
 </div></details><button type="button" class="premium-discover-btn" onclick="openPremium()">👑 Découvrir Premium : swipes illimités + 5 Ultra Push</button><div class="demo-swipe-section"><h3>✨ Essayer le swipe</h3><p class="geo-note">Personnages fictifs IA, uniquement pour découvrir le fonctionnement. Aucun vrai match possible.</p><div id="demoSwipe"></div></div><h3>Vrais membres</h3><div id="people"></div></section>
+<section id="intimity" class="hide box intimity-page">
+<span class="intimity-age">18+ · ESPACE ADULTE</span>
+<h2>🔥 LEMEET Intimity</h2>
+<p>Un espace de rencontres intimes pour adultes consentants, distinct de LEMEET classique.</p>
+<div class="intimity-free"><strong>Entrée gratuite</strong><p>Tu n’as pas besoin d’un abonnement pour accéder à cet univers.</p></div>
+<div class="intimity-free"><strong>👑 Premium facultatif · £9.99/mois</strong><p>Un abonnement commun aux deux univers : swipes illimités et 5 Ultra Push par mois partagés, une fois ces avantages activés.</p><button type="button" onclick="openPremium()">Comprendre les avantages Premium</button></div>
+<div class="intimity-free"><strong>Respect et confidentialité</strong><p>Réservé aux 18 ans et plus. Consentement mutuel, respect des limites et signalement des comportements inappropriés.</p></div>
+<p class="premium-warning">Cette page est un aperçu gratuit. La découverte des membres, les préférences Intimity et les fonctions Premium ne sont pas encore opérationnelles dans cet espace.</p>
+<button type="button" onclick="openProfile()">← Revenir à mon profil</button>
+</section>
 <section id="premium" class="hide box">
 <span class="section-eyebrow">PLUS DE POSSIBILITÉS</span>
 <h2>👑 LEMEET Premium</h2>
@@ -149,14 +165,15 @@ html,body{max-width:100%;overflow-x:clip}
 </div>
 <p class="premium-warning"><b>En préparation :</b> ces avantages ne sont pas encore activés. Le paiement Stripe existe, mais l'accès Premium automatique, les swipes illimités et les Ultra Push restent à développer. N'effectue pas de paiement pour obtenir ces avantages tant que leur activation n'est pas annoncée.</p>
 <p><a href="https://buy.stripe.com/28EeVf9gM2cu4fgdcC0VO00" target="_blank" rel="noopener noreferrer">Voir la page de paiement Stripe existante ↗</a></p>
-<div class="premium-separate"><span class="intimity-age">18+ · ESPACE ADULTE</span><h3>🔥 LEMEET Intimity</h3><p>Un univers distinct pour les rencontres intimes entre adultes consentants, avec des préférences et règles spécifiques.</p><p><strong>Un seul Premium, deux univers :</strong> swipes illimités et 5 Ultra Push mensuels partagés entre LEMEET et Intimity, une fois ces fonctions activées.</p><p class="intimity-note">Intimity et les avantages Premium sont encore en préparation. Aucun accès ou avantage automatique n’est actif à ce stade.</p></div>
+<div class="premium-separate"><span class="intimity-age">18+ · ESPACE ADULTE</span><h3>🔥 LEMEET Intimity</h3><p>Un univers distinct pour les rencontres intimes entre adultes consentants, avec des préférences et règles spécifiques.</p><p><strong>Un seul Premium, deux univers :</strong> swipes illimités et 5 Ultra Push mensuels partagés entre LEMEET et Intimity, une fois ces fonctions activées.</p><p class="intimity-note">L’entrée dans Intimity est gratuite. Ses rencontres et filtres spécialisés sont encore en préparation ; les avantages Premium ne sont pas encore activés.</p><button type="button" onclick="openIntimity()">Découvrir gratuitement Intimity →</button></div>
 </section>
 <section id="matches" class="hide box"><span class="section-eyebrow">VOS CONNEXIONS</span><h2>Mes matchs ♥</h2><div id="matchlist"></div></section>
 <p id="m" role="status"></p><div id="nav" class="nav hide"><button id="nav-profile" onclick="openProfile()">👤 Profil</button><button id="nav-discover" onclick="openDiscover()">♥ Découvrir</button><button id="nav-matches" onclick="openMatches()">💬 Matchs</button><button id="nav-premium" onclick="openPremium()">👑 Premium</button></div></main>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script>
 const db=supabase.createClient('https://xrdolyfbbflifwbnkjhi.supabase.co','sb_publishable_C4j_c2VUBIsoUB4CS1JVrQ_pq1FEcyt');const $=id=>document.getElementById(id);let u=null;const BUCKET='Profile-photos';
-function show(x){['home','signup','login','profile','discover','matches','premium'].forEach(id=>$(id).classList.toggle('hide',id!==x));$('nav').classList.toggle('hide',!u);['profile','discover','matches','premium'].forEach(id=>$('nav-'+id).classList.toggle('active',id===x));$('m').textContent='';window.scrollTo(0,0)}
+function show(x){['home','signup','login','profile','discover','matches','premium','intimity'].forEach(id=>$(id).classList.toggle('hide',id!==x));$('nav').classList.toggle('hide',!u);['profile','discover','matches','premium'].forEach(id=>$('nav-'+id).classList.toggle('active',id===x));$('m').textContent='';window.scrollTo(0,0)}
 function openPremium(){show('premium')}
+function openIntimity(){if(!u){show('login');msg('Connecte-toi pour accéder gratuitement à Intimity (18+).');return}show('intimity')}
 function msg(x){$('m').textContent=x}
 function adult(d){if(!d)return false;const b=new Date(d+'T12:00:00');if(isNaN(b))return false;const n=new Date();let a=n.getFullYear()-b.getFullYear();if(n.getMonth()<b.getMonth()||(n.getMonth()===b.getMonth()&&n.getDate()<b.getDate()))a--;return a>=18}
 async function signUpUser(){if(!adult($('bd').value))return msg('Réservé aux 18+.');const r=await db.auth.signUp({email:$('se').value,password:$('sp').value});if(r.error)return msg(r.error.message);u=r.data.session?.user||null;if(u){await db.from('profiles').upsert({id:u.id,birth_date:$('bd').value});await openProfile()}else msg('Compte créé. Vérifie ton e-mail avant de te connecter.')}
