@@ -1,0 +1,8 @@
+{
+  "appId": "com.lemeet.app",
+  "appName": "LEMEET",
+  "webDir": "www",
+  "android": {
+    "allowMixedContent": false
+  }
+}
