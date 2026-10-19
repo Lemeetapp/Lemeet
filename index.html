@@ -72,6 +72,23 @@
 .premium-separate{margin-top:24px;border-top:1px solid #ffffff40;padding-top:15px}
 .premium-discover-btn{margin:16px 0!important}
 .nav{gap:3px}.nav button{font-size:clamp(10px,2.6vw,14px);padding:10px 3px}
+
+/* LEMEET compact discovery and Intimity visual distinction */
+.premium-separate{background:linear-gradient(145deg,#54152e,#311525);border:1px solid #e88c9b;border-radius:20px;padding:20px;margin-top:24px}
+.intimity-age{display:inline-block;padding:7px 12px;border-radius:999px;background:#a62943;color:white;font-size:13px;font-weight:800;letter-spacing:.09em}
+.premium-separate h3{margin:13px 0 8px;font-size:23px}.premium-separate p{line-height:1.55}
+.intimity-note{font-size:12px;opacity:.85}
+.geo-fold{border:1px solid #ffffff30;border-radius:15px;padding:0 12px;margin:12px 0}
+.geo-fold summary{padding:13px 3px;cursor:pointer;font-weight:700;list-style:none}
+.geo-fold summary::-webkit-details-marker{display:none}
+.geo-fold summary:after{content:'⌄';float:right}
+.geo-fold[open] summary:after{content:'⌃'}
+.geo-fold .geo-panel{margin:0 0 12px;padding:10px}
+.demo-swipe-card{max-width:360px;margin:8px auto 14px}
+.demo-swipe-photo{height:240px}
+.demo-swipe-info{padding:12px}
+.premium-discover-btn{width:100%;font-size:13px}
+@media(max-width:480px){.nav{position:sticky;bottom:0;z-index:5;background:#231629;padding:6px 0}.nav button{font-size:11px}.demo-swipe-photo{height:220px}}
 </style></head><body><main class="a"><div class="logo">Le Meet <span class="pink">♥</span></div>
 <section id="home"><span class="hero-pill">✦ DES RENCONTRES AUTHENTIQUES</span>
 <h1>More than<br><span class="pink">a match.</span></h1>
@@ -106,13 +123,13 @@
 <h3>Mes passions</h3><p class="notice">Choisis les passions qui te représentent.</p><div id="hobbyChoices" class="hobby-choices"></div><input id="pa" type="hidden"><button type="button" onclick="saveProfile()">Enregistrer mes modifications</button><button type="button" class="secondary-btn" onclick="showProfileView()">Retour à mon profil</button></div>
 <div id="profilePhotos" class="hide"><h2>Gérer mes photos</h2><p class="notice">Ajoute jusqu'à 6 photos. La première est ta photo principale.</p><input id="photoInput" type="file" accept="image/jpeg,image/png,image/webp" multiple onchange="uploadPhotos(event)"><div id="photoGallery" class="gallery"></div><button type="button" class="secondary-btn" onclick="showProfileView()">Retour à mon profil</button></div>
 </section>
-<section id="discover" class="hide box"><span class="section-eyebrow">RENCONTRES AUTHENTIQUES</span><h2>Découvrir ♥</h2><p class="discover-intro">Rencontre des personnes qui partagent tes envies. Chaque profil affiché appartient à un véritable membre.</p><div class="geo-panel">
+<section id="discover" class="hide box"><span class="section-eyebrow">RENCONTRES AUTHENTIQUES</span><h2>Découvrir ♥</h2><p class="discover-intro">Rencontre des personnes qui partagent tes envies. Chaque profil affiché appartient à un véritable membre.</p><details class="geo-fold"><summary>⚙ Filtres de découverte <span id="distanceSummary">· 50 km</span></summary><div class="geo-panel">
 <div class="geo-row"><strong>📍 Recherche à proximité</strong><span id="distanceValue">50 km</span></div>
 <label for="distanceFilter">Distance maximale</label>
 <input id="distanceFilter" type="range" min="5" max="200" step="5" value="50" oninput="updateDistance(this.value)">
 <div class="geo-row"><span id="locationStatus">Position non partagée</span><button type="button" onclick="requestLocation()">Utiliser ma position</button></div>
 <p class="geo-note">Ta position est facultative et reste sur cet appareil dans cette version. Les autres membres ne voient jamais tes coordonnées exactes. Le filtrage réel par distance sera activé lorsque les profils disposeront de localisations consenties et sécurisées.</p>
-</div><button type="button" class="premium-discover-btn" onclick="openPremium()">👑 Découvrir Premium : swipes illimités + 5 Ultra Push</button><div class="demo-swipe-section"><h3>✨ Essayer le swipe</h3><p class="geo-note">Personnages fictifs IA, uniquement pour découvrir le fonctionnement. Aucun vrai match possible.</p><div id="demoSwipe"></div></div><h3>Vrais membres</h3><div id="people"></div></section>
+</div></details><button type="button" class="premium-discover-btn" onclick="openPremium()">👑 Découvrir Premium : swipes illimités + 5 Ultra Push</button><div class="demo-swipe-section"><h3>✨ Essayer le swipe</h3><p class="geo-note">Personnages fictifs IA, uniquement pour découvrir le fonctionnement. Aucun vrai match possible.</p><div id="demoSwipe"></div></div><h3>Vrais membres</h3><div id="people"></div></section>
 <section id="premium" class="hide box">
 <span class="section-eyebrow">PLUS DE POSSIBILITÉS</span>
 <h2>👑 LEMEET Premium</h2>
@@ -125,7 +142,7 @@
 </div>
 <p class="premium-warning"><b>En préparation :</b> ces avantages ne sont pas encore activés. Le paiement Stripe existe, mais l'accès Premium automatique, les swipes illimités et les Ultra Push restent à développer. N'effectue pas de paiement pour obtenir ces avantages tant que leur activation n'est pas annoncée.</p>
 <p><a href="https://buy.stripe.com/28EeVf9gM2cu4fgdcC0VO00" target="_blank" rel="noopener noreferrer">Voir la page de paiement Stripe existante ↗</a></p>
-<div class="premium-separate"><h3>🔥 Et LEMEET Intimity ?</h3><p>C'est un espace distinct, réservé aux adultes de 18 ans et plus, avec des préférences et règles spécifiques. L'accès et ses fonctionnalités sont encore en préparation.</p></div>
+<div class="premium-separate"><span class="intimity-age">18+ · ESPACE ADULTE</span><h3>🔥 LEMEET Intimity</h3><p>Un univers distinct pour les rencontres intimes entre adultes consentants, avec des préférences et règles spécifiques.</p><p><strong>Un seul Premium, deux univers :</strong> swipes illimités et 5 Ultra Push mensuels partagés entre LEMEET et Intimity, une fois ces fonctions activées.</p><p class="intimity-note">Intimity et les avantages Premium sont encore en préparation. Aucun accès ou avantage automatique n’est actif à ce stade.</p></div>
 </section>
 <section id="matches" class="hide box"><span class="section-eyebrow">VOS CONNEXIONS</span><h2>Mes matchs ♥</h2><div id="matchlist"></div></section>
 <p id="m" role="status"></p><div id="nav" class="nav hide"><button id="nav-profile" onclick="openProfile()">👤 Profil</button><button id="nav-discover" onclick="openDiscover()">♥ Découvrir</button><button id="nav-matches" onclick="openMatches()">💬 Matchs</button><button id="nav-premium" onclick="openPremium()">👑 Premium</button></div></main>
@@ -163,16 +180,21 @@ function requestLocation(){if(!navigator.geolocation){$('locationStatus').textCo
 const DEMO_SWIPES=[
 {name:'Camille',age:29,interests:'Voyages · Musique · Cuisine',pos:'18% 40%'},
 {name:'Alex',age:32,interests:'Sport · Nature · Cinéma',pos:'80% 45%'},
-{name:'Noa',age:27,interests:'Art · Lecture · Restaurants',pos:'48% 50%'}
+{name:'Noa',age:27,interests:'Art · Lecture · Restaurants',pos:'48% 50%'},
+{name:'Lina',age:30,interests:'Randonnée · Danse · Voyages',pos:'20% 55%'},
+{name:'Sam',age:34,interests:'Cuisine · Lecture · Musique',pos:'78% 30%'},
+{name:'Charlie',age:28,interests:'Cinéma · Art · Nature',pos:'45% 55%'},
+{name:'Lou',age:31,interests:'Sport · Animaux · Théâtre',pos:'15% 28%'},
+{name:'Morgan',age:33,interests:'Photographie · Voyages · Café',pos:'85% 65%'}
 ];
 let demoSwipeIndex=0;
-function demoSwipe(action){if(action==='like')msg('♥ Coup de cœur de démonstration : aucun vrai like envoyé.');else msg('Profil démo passé.');demoSwipeIndex++;renderDemoSwipe()}
+function demoSwipe(action){if(action==='like')msg('♥ Coup de cœur de démonstration : aucun vrai like envoyé.');else msg('Profil démo passé.');demoSwipeIndex=(demoSwipeIndex+1)%DEMO_SWIPES.length;renderDemoSwipe()}
 function renderDemoSwipe(){
 const holder=$('demoSwipe');if(!holder)return;
 holder.replaceChildren();
-if(demoSwipeIndex>=DEMO_SWIPES.length){const p=document.createElement('p');p.textContent='Tu as terminé les profils de démonstration. Recommence pour t’entraîner.';holder.appendChild(p);const again=document.createElement('button');again.textContent='Recommencer la démo';again.onclick=()=>{demoSwipeIndex=0;renderDemoSwipe()};holder.appendChild(again);return}
+
 const p=DEMO_SWIPES[demoSwipeIndex];
-const card=document.createElement('article');card.className='demo-swipe-card';
+const card=document.createElement('article');card.className='demo-swipe-card';let touchStartX=null;card.addEventListener('touchstart',e=>{touchStartX=e.changedTouches[0].clientX},{passive:true});card.addEventListener('touchend',e=>{if(touchStartX===null)return;const delta=e.changedTouches[0].clientX-touchStartX;touchStartX=null;if(Math.abs(delta)>70)demoSwipe(delta>0?'like':'pass')},{passive:true});
 const photo=document.createElement('div');photo.className='demo-swipe-photo';photo.style.backgroundPosition=p.pos;
 const tag=document.createElement('span');tag.className='demo-swipe-label';tag.textContent='PERSONNAGE FICTIF · DÉMO IA';photo.appendChild(tag);
 const details=document.createElement('div');details.className='demo-swipe-info';
