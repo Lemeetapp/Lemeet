@@ -1,8 +1,14 @@
+
 {
   "appId": "com.lemeet.app",
   "appName": "LEMEET",
   "webDir": "www",
   "android": {
     "allowMixedContent": false
+  },
+  "plugins": {
+    "App": {
+      "launchUrl": "com.lemeet.app://auth/callback"
+    }
   }
 }
