@@ -60,6 +60,18 @@
 .demo-swipe-label{position:absolute;top:12px;left:12px;background:#21142ddd;border:1px solid #ffffff80;border-radius:20px;padding:7px 10px;font-size:11px;font-weight:800}
 .demo-swipe-info{padding:18px}.demo-swipe-info h3{margin:0 0 8px}.demo-swipe-info p{margin:8px 0}
 .demo-swipe-actions{display:flex;gap:10px}.demo-swipe-actions button{flex:1;min-width:0}
+
+.premium-lead{font-size:17px;line-height:1.55}
+.premium-price{margin:16px 0 22px;padding:20px;border-radius:20px;background:linear-gradient(115deg,#7e2e8a,#b3327b);text-align:center}
+.premium-price strong{font-size:38px}
+.premium-benefits{display:grid;gap:12px;margin-bottom:18px}
+.premium-benefits>div{padding:17px;border-radius:17px;border:1px solid #d27bc455;background:#32213d}
+.premium-benefits b{font-size:17px}
+.premium-benefits p{margin:7px 0 0;line-height:1.5}
+.premium-warning{padding:15px;border-radius:13px;background:#453343;border:1px solid #d9a5bd;font-size:13px;line-height:1.55}
+.premium-separate{margin-top:24px;border-top:1px solid #ffffff40;padding-top:15px}
+.premium-discover-btn{margin:16px 0!important}
+.nav{gap:3px}.nav button{font-size:clamp(10px,2.6vw,14px);padding:10px 3px}
 </style></head><body><main class="a"><div class="logo">Le Meet <span class="pink">♥</span></div>
 <section id="home"><span class="hero-pill">✦ DES RENCONTRES AUTHENTIQUES</span>
 <h1>More than<br><span class="pink">a match.</span></h1>
@@ -89,7 +101,7 @@
 <div class="profile-slide-actions"><button type="button" onclick="slideProfilePhoto(-1)" aria-label="Photo précédente">‹</button><span id="profilePhotoCount">0 photo</span><button type="button" onclick="slideProfilePhoto(1)" aria-label="Photo suivante">›</button></div>
 <div class="profile-details"><h2 id="profileDisplayName">Mon profil</h2><p id="profileDisplayIntent"></p><div id="profileDisplayHobbies" class="hobby-tags"></div></div></div>
 <button type="button" onclick="openProfileEditor()">✏️ Modifier mon profil</button><button type="button" onclick="openPhotoManager()">📷 Gérer mes photos</button>
-<a href="https://buy.stripe.com/28EeVf9gM2cu4fgdcC0VO00">♥ Premium £9.99/mois</a><button type="button" onclick="logOutUser()">Déconnexion</button></div>
+<button type="button" onclick="openPremium()">👑 Découvrir les avantages Premium</button><button type="button" onclick="logOutUser()">Déconnexion</button></div>
 <div id="profileEdit" class="hide"><h2>Modifier mon profil</h2><label for="nm">Prénom</label><input id="nm" placeholder="Prénom"><label for="dob">Date de naissance (privée)</label><input id="dob" type="date"><label for="it">Je recherche</label><select id="it"><option value="">Je recherche…</option><option value="serious">Relation sérieuse</option><option value="getting_to_know">Faire connaissance</option><option value="casual">Sans pression</option></select>
 <h3>Mes passions</h3><p class="notice">Choisis les passions qui te représentent.</p><div id="hobbyChoices" class="hobby-choices"></div><input id="pa" type="hidden"><button type="button" onclick="saveProfile()">Enregistrer mes modifications</button><button type="button" class="secondary-btn" onclick="showProfileView()">Retour à mon profil</button></div>
 <div id="profilePhotos" class="hide"><h2>Gérer mes photos</h2><p class="notice">Ajoute jusqu'à 6 photos. La première est ta photo principale.</p><input id="photoInput" type="file" accept="image/jpeg,image/png,image/webp" multiple onchange="uploadPhotos(event)"><div id="photoGallery" class="gallery"></div><button type="button" class="secondary-btn" onclick="showProfileView()">Retour à mon profil</button></div>
@@ -100,12 +112,27 @@
 <input id="distanceFilter" type="range" min="5" max="200" step="5" value="50" oninput="updateDistance(this.value)">
 <div class="geo-row"><span id="locationStatus">Position non partagée</span><button type="button" onclick="requestLocation()">Utiliser ma position</button></div>
 <p class="geo-note">Ta position est facultative et reste sur cet appareil dans cette version. Les autres membres ne voient jamais tes coordonnées exactes. Le filtrage réel par distance sera activé lorsque les profils disposeront de localisations consenties et sécurisées.</p>
-</div><h3>Vrais membres</h3><div id="people"></div><div class="demo-swipe-section"><h3>✨ Découverte en démonstration</h3><p class="geo-note">Entraîne-toi au swipe avec des personnages fictifs créés à partir d’illustrations IA. Ils ne peuvent pas répondre.</p><div id="demoSwipe"></div></div></section>
+</div><button type="button" class="premium-discover-btn" onclick="openPremium()">👑 Découvrir Premium : swipes illimités + 5 Ultra Push</button><div class="demo-swipe-section"><h3>✨ Essayer le swipe</h3><p class="geo-note">Personnages fictifs IA, uniquement pour découvrir le fonctionnement. Aucun vrai match possible.</p><div id="demoSwipe"></div></div><h3>Vrais membres</h3><div id="people"></div></section>
+<section id="premium" class="hide box">
+<span class="section-eyebrow">PLUS DE POSSIBILITÉS</span>
+<h2>👑 LEMEET Premium</h2>
+<p class="premium-lead">Rencontre plus librement et donne de la visibilité à tes coups de cœur.</p>
+<div class="premium-price"><strong>£9.99</strong><span> / mois</span></div>
+<div class="premium-benefits">
+<div><b>♥ Swipes illimités</b><p>Découvre et aime des profils réels sans limite quotidienne.</p></div>
+<div><b>⚡ 5 Ultra Push / mois</b><p>Fais remonter un coup de cœur dans la boîte prioritaire de la personne choisie.</p></div>
+<div><b>🔔 Priorité respectueuse</b><p>Un Ultra Push attire l’attention, sans garantir de réponse ni créer de conversation sans match.</p></div>
+</div>
+<p class="premium-warning"><b>En préparation :</b> ces avantages ne sont pas encore activés. Le paiement Stripe existe, mais l'accès Premium automatique, les swipes illimités et les Ultra Push restent à développer. N'effectue pas de paiement pour obtenir ces avantages tant que leur activation n'est pas annoncée.</p>
+<p><a href="https://buy.stripe.com/28EeVf9gM2cu4fgdcC0VO00" target="_blank" rel="noopener noreferrer">Voir la page de paiement Stripe existante ↗</a></p>
+<div class="premium-separate"><h3>🔥 Et LEMEET Intimity ?</h3><p>C'est un espace distinct, réservé aux adultes de 18 ans et plus, avec des préférences et règles spécifiques. L'accès et ses fonctionnalités sont encore en préparation.</p></div>
+</section>
 <section id="matches" class="hide box"><span class="section-eyebrow">VOS CONNEXIONS</span><h2>Mes matchs ♥</h2><div id="matchlist"></div></section>
-<p id="m" role="status"></p><div id="nav" class="nav hide"><button id="nav-profile" onclick="openProfile()">👤 Profil</button><button id="nav-discover" onclick="openDiscover()">♥ Découvrir</button><button id="nav-matches" onclick="openMatches()">💬 Matchs</button></div></main>
+<p id="m" role="status"></p><div id="nav" class="nav hide"><button id="nav-profile" onclick="openProfile()">👤 Profil</button><button id="nav-discover" onclick="openDiscover()">♥ Découvrir</button><button id="nav-matches" onclick="openMatches()">💬 Matchs</button><button id="nav-premium" onclick="openPremium()">👑 Premium</button></div></main>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script>
 const db=supabase.createClient('https://xrdolyfbbflifwbnkjhi.supabase.co','sb_publishable_C4j_c2VUBIsoUB4CS1JVrQ_pq1FEcyt');const $=id=>document.getElementById(id);let u=null;const BUCKET='Profile-photos';
-function show(x){['home','signup','login','profile','discover','matches'].forEach(id=>$(id).classList.toggle('hide',id!==x));$('nav').classList.toggle('hide',!u);['profile','discover','matches'].forEach(id=>$('nav-'+id).classList.toggle('active',id===x));$('m').textContent='';window.scrollTo(0,0)}
+function show(x){['home','signup','login','profile','discover','matches','premium'].forEach(id=>$(id).classList.toggle('hide',id!==x));$('nav').classList.toggle('hide',!u);['profile','discover','matches','premium'].forEach(id=>$('nav-'+id).classList.toggle('active',id===x));$('m').textContent='';window.scrollTo(0,0)}
+function openPremium(){show('premium')}
 function msg(x){$('m').textContent=x}
 function adult(d){if(!d)return false;const b=new Date(d+'T12:00:00');if(isNaN(b))return false;const n=new Date();let a=n.getFullYear()-b.getFullYear();if(n.getMonth()<b.getMonth()||(n.getMonth()===b.getMonth()&&n.getDate()<b.getDate()))a--;return a>=18}
 async function signUpUser(){if(!adult($('bd').value))return msg('Réservé aux 18+.');const r=await db.auth.signUp({email:$('se').value,password:$('sp').value});if(r.error)return msg(r.error.message);u=r.data.session?.user||null;if(u){await db.from('profiles').upsert({id:u.id,birth_date:$('bd').value});await openProfile()}else msg('Compte créé. Vérifie ton e-mail avant de te connecter.')}
