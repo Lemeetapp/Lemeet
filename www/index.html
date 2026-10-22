@@ -219,7 +219,45 @@ function openIntimity(){show('intimity');loadIntimityProfile()}
 function openExperiences(){show('experiences')}
 function openDatingPrefs(){show('preferences');loadDatingPrefs()}
 function intimityDiscover(){openIntimity()}
-async function socialLogin(provider){try{const redirectTo=window.Capacitor?.isNativePlatform?.()?'com.lemeet.app://auth/callback':window.location.origin+window.location.pathname;const r=await db.auth.signInWithOAuth({provider,options:{redirectTo}});if(r.error)throw r.error}catch(e){msg('Connexion '+(provider==='google'?'Google':'Apple')+' indisponible : '+e.message+'. Vérifie la configuration du fournisseur dans Supabase.')}}
+const LEMEET_NATIVE_CALLBACK='com.lemeet.app://auth/callback';
+function lemeetIsNative(){return !!window.Capacitor?.isNativePlatform?.()}
+async function lemeetHandleAuthUrl(url){
+  if(!url||!url.startsWith(LEMEET_NATIVE_CALLBACK))return;
+  try{
+    const parsed=new URL(url);
+    const err=parsed.searchParams.get('error_description')||parsed.searchParams.get('error');
+    if(err)throw new Error(err);
+    const code=parsed.searchParams.get('code');
+    if(!code)throw new Error('Code de connexion manquant.');
+    const result=await db.auth.exchangeCodeForSession(code);
+    if(result.error)throw result.error;
+    u=result.data.user||result.data.session?.user||null;
+    if(u)await checkSocialAge();
+    try{await window.Capacitor?.Plugins?.Browser?.close()}catch(_){}
+  }catch(e){msg('Connexion impossible : '+e.message)}
+}
+async function lemeetInitNativeAuth(){
+  if(!lemeetIsNative())return;
+  const app=window.Capacitor?.Plugins?.App;
+  if(!app?.addListener){msg('Connexion Android indisponible : plugin App manquant.');return}
+  await app.addListener('appUrlOpen',event=>{lemeetHandleAuthUrl(event?.url)});
+  try{const launch=await app.getLaunchUrl();if(launch?.url)await lemeetHandleAuthUrl(launch.url)}catch(_){}
+}
+async function socialLogin(provider){
+  try{
+    const native=lemeetIsNative();
+    const redirectTo=native?LEMEET_NATIVE_CALLBACK:window.location.origin+window.location.pathname;
+    const options=native?{redirectTo,skipBrowserRedirect:true}:{redirectTo};
+    const r=await db.auth.signInWithOAuth({provider,options});
+    if(r.error)throw r.error;
+    if(native){
+      const browser=window.Capacitor?.Plugins?.Browser;
+      if(!browser?.open)throw new Error('Plugin Browser Android manquant.');
+      if(!r.data?.url)throw new Error('URL de connexion manquante.');
+      await browser.open({url:r.data.url});
+    }
+  }catch(e){msg('Connexion '+(provider==='google'?'Google':'Apple')+' indisponible : '+e.message)}
+}
 async function completeOAuthAge(){if(!u)return show('login');const date=$('oauth-dob').value;if(!adult(date))return msg('Accès réservé aux personnes de 18 ans et plus.');const r=await db.from('profiles').upsert({id:u.id,birth_date:date,updated_at:new Date().toISOString()});if(r.error)return msg('Enregistrement impossible : '+r.error.message);await openProfile()}
 async function logOutOAuth(){await db.auth.signOut();u=null;show('home')}
 async function checkSocialAge(){if(!u)return;const r=await db.from('profiles').select('birth_date').eq('id',u.id).maybeSingle();if(r.error)return msg('Impossible de vérifier ton âge : '+r.error.message);if(!r.data?.birth_date||!adult(r.data.birth_date)){show('ageverify');return}await openProfile()}
@@ -332,5 +370,5 @@ async function getPhotoFiles(){const r=await db.storage.from(BUCKET).list(u.id,{
 async function loadPhotos(){if(!u)return;const g=$('photoGallery');g.textContent='Chargement des photos…';try{const files=(await getPhotoFiles()).slice(0,6);g.innerHTML='';if(!files.length){g.textContent='Aucune photo pour le moment.';return}for(const [i,f] of files.entries()){const path=u.id+'/'+f.name;const r=await db.storage.from(BUCKET).createSignedUrl(path,3600);const tile=document.createElement('div');tile.className='tile';if(r.data?.signedUrl){const img=document.createElement('img');img.src=r.data.signedUrl;img.alt='Photo du profil';tile.appendChild(img)}if(i===0){const label=document.createElement('small');label.textContent='Principale';tile.appendChild(label)}const btn=document.createElement('button');btn.textContent='Supprimer';btn.onclick=()=>deletePhoto(path);tile.appendChild(btn);g.appendChild(tile)}}catch(e){g.textContent='Impossible de charger les photos : '+e.message}}
 async function uploadPhotos(ev){if(!u)return msg('Connecte-toi pour ajouter des photos.');const input=ev.target,files=Array.from(input.files||[]);input.value='';if(!files.length)return;try{const existing=await getPhotoFiles();if(existing.length+files.length>6)return msg('Maximum 6 photos. Il reste '+Math.max(0,6-existing.length)+' place(s).');for(const file of files){if(!['image/jpeg','image/png','image/webp'].includes(file.type))return msg('Formats acceptés : JPG, PNG, WebP.');if(file.size>5*1024*1024)return msg('Chaque photo doit faire moins de 5 Mo.')}for(const file of files){const ext=file.type==='image/png'?'png':file.type==='image/webp'?'webp':'jpg';const path=u.id+'/'+Date.now()+'-'+crypto.randomUUID()+'.'+ext;const r=await db.storage.from(BUCKET).upload(path,file,{contentType:file.type,upsert:false});if(r.error)throw r.error}msg(files.length+' photo(s) ajoutée(s) ✓');await loadPhotos();await refreshProfileSlides()}catch(e){msg('Envoi impossible : '+e.message)}}
 async function deletePhoto(path){if(!u||!path.startsWith(u.id+'/')||!confirm('Supprimer cette photo ?'))return;const r=await db.storage.from(BUCKET).remove([path]);msg(r.error?'Suppression impossible : '+r.error.message:'Photo supprimée ✓');await loadPhotos()}
-(async()=>{const r=await db.auth.getSession();if(r.data.session){u=r.data.session.user;await checkSocialAge()}})();
+(async()=>{await lemeetInitNativeAuth();const r=await db.auth.getSession();if(r.data.session){u=r.data.session.user;await checkSocialAge()}})();
 </script></body></html>
